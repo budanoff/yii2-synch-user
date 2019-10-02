@@ -1,0 +1,21 @@
+{
+    "name": "budanoff/yii2-synch-user",
+    "description": "Расширение для синхронизации пользователей ИАС Мониторинг (для подсистем программного комплекса))",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension"," synch users iasmon"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "budanoff",
+            "email": "budanov@mirea.ru"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "budanoff\\synchuser\\": ""
+        }
+    }
+}
