@@ -1,6 +1,6 @@
 <?php
 
-namespace app\module\synchuser\controllers;
+namespace budanoff\synchuser\controllers;
 
 use app\module\synchuser\models\User;
 use Yii;

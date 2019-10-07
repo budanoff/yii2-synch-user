@@ -1,6 +1,6 @@
 <?php
 
-namespace app\module\synchuser\models;
+namespace budanoff\synchuser\models;
 
 use yii\db\ActiveRecord;
 

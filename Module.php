@@ -1,6 +1,6 @@
 <?php
 
-namespace app\module\synchuser;
+namespace budanoff\synchuser;
 
 use yii\base\InvalidConfigException;
 use yii\web\HttpException;
