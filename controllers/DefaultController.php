@@ -1,20 +1,95 @@
 <?php
 
-namespace budanoff\synchuser\controllers;
+namespace app\module\synchuser\controllers;
 
+use app\module\synchuser\models\User;
+use Yii;
+use yii\filters\VerbFilter;
+use yii\helpers\Json;
+use yii\rbac\PhpManager;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 
 /**
  * Default controller for the `synchuser` module
  */
 class DefaultController extends Controller
 {
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index'  => ['POST'],
+                ],
+            ],
+        ];
+    }
+
     /**
-     * Renders the index view for the module
-     * @return string
+     * @return Json
+     * @throws BadRequestHttpException*@throws \yii\base\Exception
+     *
+     * @throws ForbiddenHttpException
+     * @throws \yii\base\Exception
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $secret_key = Yii::$app->request->post('secret_key');
+        if ($secret_key != $this->module->secret_key) {
+            throw new ForbiddenHttpException("forbidden");
+        }
+
+        $username = Yii::$app->request->post('username');
+        $user = User::find()->where(["username"=>$username])->one();
+
+        if (empty($user)) {
+            $user = new User();
+            $user->created_at = time();
+            $user->auth_key = Yii::$app->security->generateRandomString();
+        }
+
+        $user->username = $username;
+        $user->password_hash = Yii::$app->security->generatePasswordHash(trim(Yii::$app->request->post('pwd')));
+        $email = Yii::$app->request->post('email');
+        $user->email = (filter_var($email, FILTER_VALIDATE_EMAIL))?$email:"empty@email.ru";
+        $user->status = (Yii::$app->request->post('status')==1)?10:0;
+        $user->name = Yii::$app->request->post('name');
+        $user->updated_at = time();
+        $id_org = Yii::$app->request->post('id_org');
+        $user->id_org = ($id_org!="")?$id_org:null;
+
+
+        if (!$user->save()) {
+            throw new BadRequestHttpException("Can not save");
+        }
+
+        $access = Yii::$app->request->post('access');
+        $role_name = ($access=='podved' or $access=='other_podved')?"user":$access;
+        $this->checkRole($user->id, $role_name);
+
+        return Json::encode(["result"=>1]);
+    }
+
+    /**
+     * @param $id_user integer
+     * @param $role_name string
+     * @throws \Exception
+     */
+    public function checkRole($id_user, $role_name)
+    {
+        $role =  new PhpManager();
+        $user = $role->getRolesByUser($id_user);
+        if (count($user)==0) {
+            $role->assign($role->getRole($role_name), $id_user);
+        }
     }
 }
