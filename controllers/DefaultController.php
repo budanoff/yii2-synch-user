@@ -2,6 +2,7 @@
 
 namespace budanoff\synchuser\controllers;
 
+
 use app\module\synchuser\models\User;
 use Yii;
 use yii\filters\VerbFilter;
@@ -45,7 +46,7 @@ class DefaultController extends Controller
     {
         $secret_key = Yii::$app->request->post('secret_key');
         if ($secret_key != $this->module->secret_key) {
-            throw new ForbiddenHttpException("forbidden");
+            throw new ForbiddenHttpException("forbidden".$secret_key."_");
         }
 
         $username = Yii::$app->request->post('username');
@@ -53,20 +54,9 @@ class DefaultController extends Controller
 
         if (empty($user)) {
             $user = new User();
-            $user->created_at = time();
-            $user->auth_key = Yii::$app->security->generateRandomString();
         }
 
-        $user->username = $username;
-        $user->password_hash = Yii::$app->security->generatePasswordHash(trim(Yii::$app->request->post('pwd')));
-        $email = Yii::$app->request->post('email');
-        $user->email = (filter_var($email, FILTER_VALIDATE_EMAIL))?$email:"empty@email.ru";
-        $user->status = (Yii::$app->request->post('status')==1)?10:0;
-        $user->name = Yii::$app->request->post('name');
-        $user->updated_at = time();
-        $id_org = Yii::$app->request->post('id_org');
-        $user->id_org = ($id_org!="")?$id_org:null;
-
+        $user->load(Yii::$app->request->post(), '');
 
         if (!$user->save()) {
             throw new BadRequestHttpException("Can not save");

@@ -2,11 +2,13 @@
 
 namespace budanoff\synchuser\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "user".
  *
+ * @property string $pwd
  * @property int $id
  * @property string $username
  * @property string $auth_key
@@ -23,6 +25,7 @@ use yii\db\ActiveRecord;
  */
 class User extends ActiveRecord
 {
+    public $pwd;
     /**
      * {@inheritdoc}
      */
@@ -37,7 +40,7 @@ class User extends ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at', 'name'], 'required'],
+            [['username', 'pwd', 'email',  'name'], 'required'],
             [['status', 'created_at', 'updated_at', 'id_org'], 'integer'],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'string', 'max' => 60],
@@ -63,5 +66,25 @@ class User extends ActiveRecord
             'name' => 'Name',
             'id_org' => 'Id Org',
         ];
+    }
+
+
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert==1) {
+                $this->created_at = time();
+                $this->auth_key = Yii::$app->security->generateRandomString();
+            }
+            $this->updated_at = time();
+            $this->password_hash = Yii::$app->security->generatePasswordHash(trim($this->pwd));
+            $this->email = (filter_var($this->email, FILTER_VALIDATE_EMAIL))?$this->email:"empty@email.ru";
+            $this->status = ($this->status==1)?10:0;
+            $this->id_org = ($this->id_org!="")?$this->id_org:null;
+
+            return true;
+        }
+        return false;
     }
 }
