@@ -3,7 +3,7 @@
 namespace budanoff\synchuser\controllers;
 
 
-use app\module\synchuser\models\User;
+use budanoff\synchuser\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
