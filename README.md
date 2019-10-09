@@ -10,22 +10,24 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist budanoff/yii2-synch-user "*"
+php composer.phar require --prefer-dist budanoff/yii2-synch-user:dev-master
 ```
 
-or add
-
-```
-"budanoff/yii2-synch-user": "*"
-```
 
 to the require section of your `composer.json` file.
 
 
 Usage
 -----
-
-Once the extension is installed, simply use it in your code by  :
+update config file web.php:
 
 ```php
-<?= \budanoff\synchuser\AutoloadExample::widget(); ?>```
+    'modules'=>[
+            ...
+            'synchuser' => [
+                'class' => 'budanoff\synchuser\Module',
+                'secret_key' => ''//insert secret key
+            ],
+            ...
+        ],
+```
