@@ -13,7 +13,7 @@ class Module extends \yii\base\Module
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'app\module\synchuser\controllers';
+    public $controllerNamespace = 'budanoff\synchuser\controllers';
 
     /**
      * @var string
