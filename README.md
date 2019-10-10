@@ -31,3 +31,13 @@ update config file web.php:
             ...
         ],
 ```
+Make the route public:
+```php
+    'as access' => [
+            'class' => '',
+            'allowActions' => [
+                ...
+                'synchuser/*'
+            ]
+        ],
+```
