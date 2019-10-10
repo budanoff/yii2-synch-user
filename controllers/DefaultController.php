@@ -8,9 +8,7 @@ use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\rbac\PhpManager;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 
 /**
  * Default controller for the `synchuser` module
@@ -37,16 +35,15 @@ class DefaultController extends Controller
 
     /**
      * @return Json
-     * @throws BadRequestHttpException*@throws \yii\base\Exception
      *
-     * @throws ForbiddenHttpException
      * @throws \yii\base\Exception
+     * @throws \Exception
      */
     public function actionIndex()
     {
         $secret_key = Yii::$app->request->post('secret_key');
         if ($secret_key != $this->module->secret_key) {
-            throw new ForbiddenHttpException("forbidden".$secret_key."_");
+            return Json::encode(["result"=>0, "message"=>"403 forbidden"]);
         }
 
         $username = Yii::$app->request->post('username');
@@ -59,7 +56,7 @@ class DefaultController extends Controller
         $user->load(Yii::$app->request->post(), '');
 
         if (!$user->save()) {
-            throw new BadRequestHttpException("Can not save");
+            return Json::encode(["result"=>0, "message"=>"400 Can not save".serialize($user->errors)]);
         }
 
         $access = Yii::$app->request->post('access');
