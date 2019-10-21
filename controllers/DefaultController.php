@@ -60,7 +60,7 @@ class DefaultController extends Controller
         }
 
         $access = Yii::$app->request->post('access');
-        $role_name = ($access=='podved' or $access=='other_podved')?"user":$access;
+        $role_name = (in_array($access, $this->module->role))?$this->module->role:$access;
         $this->checkRole($user->id, $role_name);
 
         return Json::encode(["result"=>1]);
@@ -76,7 +76,13 @@ class DefaultController extends Controller
         $role =  new PhpManager();
         $user = $role->getRolesByUser($id_user);
         if (count($user)==0) {
-            $role->assign($role->getRole($role_name), $id_user);
+            if (is_array($role_name)) {
+                foreach ($role_name as $role_name_item) {
+                    $role->assign($role->getRole($role_name_item), $id_user);
+                }
+            } else {
+                $role->assign($role->getRole($role_name), $id_user);
+            }
         }
     }
 }
