@@ -26,6 +26,11 @@ class Module extends \yii\base\Module
     public $role;
 
     /**
+     * @var boolean
+     * */
+    public $reload_role;
+
+    /**
      * {@inheritdoc}
      */
     public function init()
@@ -37,6 +42,9 @@ class Module extends \yii\base\Module
         }
         if (!$this->role) {
             $this->role = [];
+        }
+        if (!$this->reload_role) {
+            $this->reload_role = false;
         }
     }
 }
