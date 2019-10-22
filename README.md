@@ -41,3 +41,18 @@ Make the route public:
             ]
         ],
 ```
+You can customize roles for user. At block 'synchuser' add array like this:
+```php
+'role' => [
+                "podved" => "user",
+                "other_podved" => "user",
+                "dep10" => [
+                    "dep10",
+                    "user"
+                ]
+            ]
+```
+ for reload role of user everytime:
+ ```php
+'reload_role' => true,
+```
