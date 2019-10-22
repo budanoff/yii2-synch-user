@@ -21,6 +21,11 @@ class Module extends \yii\base\Module
     public $secret_key;
 
     /**
+     * @var array
+     * */
+    public $role;
+
+    /**
      * {@inheritdoc}
      */
     public function init()
@@ -29,6 +34,9 @@ class Module extends \yii\base\Module
 
         if (!$this->secret_key) {
             throw new HttpException(401, "secret key is empty!");
+        }
+        if (!$this->role) {
+            $this->role = [];
         }
     }
 }
