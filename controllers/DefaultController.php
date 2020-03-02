@@ -56,7 +56,7 @@ class DefaultController extends Controller
         $user->load(Yii::$app->request->post(), '');
 
         if (!$user->save()) {
-            return Json::encode(["result"=>0, "message"=>"400 Can not save"]);
+            return Json::encode(["result"=>0, "message"=>"400 Can not save".serialize($user->getErrors())]);
         }
 
         $access = Yii::$app->request->post('access');
