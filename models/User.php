@@ -41,7 +41,8 @@ class User extends ActiveRecord
     {
         return [
             [['username', 'pwd', 'email',  'name'], 'required'],
-            [['status', 'created_at', 'updated_at', 'id_org'], 'integer'],
+            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['id_org'], 'safe'],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'string', 'max' => 60],
             [['password_hash', 'password_reset_token', 'email', 'name'], 'string', 'max' => 255],
