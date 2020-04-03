@@ -82,7 +82,7 @@ class User extends ActiveRecord
             $this->password_hash = Yii::$app->security->generatePasswordHash(trim($this->pwd));
             $this->email = (filter_var($this->email, FILTER_VALIDATE_EMAIL))?$this->email:"empty@email.ru";
             $this->status = ($this->status==1)?10:0;
-            $this->id_org = ($this->id_org!="")?$this->id_org:null;
+            $this->id_org = ($this->id_org!="" and is_numeric($this->id_org))?$this->id_org:null;
 
             return true;
         }
